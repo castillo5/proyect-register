@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
-import { insertEmployee, getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee, cargarCsv, initializeDatabase } from './employeservice.js';
+import { getAllcustomer, getcustomerById, updatecustomer,deletecustomer,cargarCsvcustomer,insertcustomer,initializeDatabase} from './customerservice.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +26,7 @@ const upload = multer({ storage });
 // API rutas (prefijo /api)
 app.get('/api/employees', async (req, res) => {
   try {
-    const rows = await getAllEmployees();
+    const rows = await getAllcustomer();
     res.json(rows);
   } catch (err) {
     console.error('Error en GET /api/employees:', err.message);
@@ -34,9 +34,9 @@ app.get('/api/employees', async (req, res) => {
   }
 });
 
-app.get('/api/employees/:id', async (req, res) => {
+app.get('/api/customer/:id', async (req, res) => {
   try {
-    const emp = await getEmployeeById(req.params.id);
+    const emp = await getcustomerById(req.params.id);
     if (!emp) return res.status(404).json({ error: 'Empleado no encontrado' });
     res.json(emp);
   } catch (err) {
@@ -45,9 +45,9 @@ app.get('/api/employees/:id', async (req, res) => {
   }
 });
 
-app.post('/api/employees', async (req, res) => {
+app.post('/api/customer', async (req, res) => {
   try {
-    const result = await insertEmployee(req.body);
+    const result = await insertcustomer(req.body);
     res.status(201).json({ success: true, insertId: result.insertId });
   } catch (err) {
     console.error('Error en POST /api/employees:', err.message);
@@ -55,22 +55,22 @@ app.post('/api/employees', async (req, res) => {
   }
 });
 
-app.put('/api/employees/:id', async (req, res) => {
+app.put('/api/customer/:id', async (req, res) => {
   try {
-    const result = await updateEmployee(req.params.id, req.body);
+    const result = await updatecustomer(req.params.id, req.body);
     res.json({ success: true, changedRows: result.affectedRows });
   } catch (err) {
-    console.error('Error en PUT /api/employees/:id:', err.message);
+    console.error('Error en PUT /api/customer/:id:', err.message);
     res.status(500).json({ error: 'Error de base de datos: ' + err.message });
   }
 });
 
-app.delete('/api/employees/:id', async (req, res) => {
+app.delete('/api/customer/:id', async (req, res) => {
   try {
-    const result = await deleteEmployee(req.params.id);
+    const result = await deletecustomer(req.params.id);
     res.json({ success: true, affectedRows: result.affectedRows });
   } catch (err) {
-    console.error('Error en DELETE /api/employees/:id:', err.message);
+    console.error('Error en DELETE /api/customer/:id:', err.message);
     res.status(500).json({ error: 'Error de base de datos: ' + err.message });
   }
 });
@@ -81,7 +81,7 @@ app.post('/api/upload-csv', upload.single('csvfile'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file' });
     const filePath = req.file.path;
     console.log(`Procesando archivo CSV: ${filePath}`);
-    const result = await cargarCsv(filePath);
+    const result = await cargarCsvcustomer(filePath);
     res.json({ success: true, file: req.file.filename, inserted: result.length });
   } catch (err) {
     console.error('Error en POST /api/upload-csv:', err.message);
@@ -117,7 +117,7 @@ const startServer = async () => {
   if (!dbReady) {
     console.error('❌ No se pudo conectar a la base de datos. Verifica:');
     console.error('   1. Que MySQL esté ejecutándose');
-    console.error('   2. Que la base de datos "postobon_01" exista');
+    console.error('   2. Que la base de datos "ExpertSoft" exista');
     console.error('   3. Que las credenciales sean correctas');
     console.error('   4. Que el usuario tenga permisos');
   }

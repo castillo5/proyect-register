@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CRUD Empleados - Vite</title>
+  <title>CRUD ExpertSoft - Vite</title>
   
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -25,30 +25,25 @@
       <div class="col">
         <h1 class="display-4 text-primary">
           <i class="fas fa-users me-2"></i>
-          Gestión de Empleados
+          Gestión de la empresa ExpertSoft
         </h1>
-        <p class="lead text-muted">Powered by Vite + Express + MySQL</p>
+        <p class="lead text-muted"> Express + MySQL</p>
       </div>
     </div>
 
-    <!-- Formulario: crear/editar -->
+
+
+    <!-- Subir CSV -->
     <div class="card mb-4">
       <div class="card-body">
-        <form id="employeeForm">
-          <input type="hidden" id="empId" />
-          <div class="row g-2">
-            <div class="col-md-3"><input required class="form-control" id="Name" placeholder="Name"></div>
-            <div class="col-md-3"><input required class="form-control" id="Lastname" placeholder="Lastname"></div>
-            <div class="col-md-3"><input class="form-control" id="Lastname2" placeholder="Lastname2"></div>
-            <div class="col-md-3"><input class="form-control" id="Email" placeholder="Email" type="email"></div>
-            <div class="col-md-3 mt-2"><input class="form-control" id="Charge" placeholder="Charge"></div>
-            <div class="col-md-3 mt-2"><input class="form-control" id="City" placeholder="City"></div>
-            <div class="col-md-3 mt-2"><input class="form-control" id="Salary" placeholder="Salary" type="number"></div>
-            <div class="col-md-3 mt-2"><input class="form-control" id="Age" placeholder="Age" type="number"></div>
-          </div>
-          <div class="mt-3">
-            <button class="btn btn-primary" id="saveBtn">Guardar</button>
-            <button class="btn btn-secondary" id="resetBtn" type="button">Limpiar</button>
+        <form id="csvForm">
+          <div class="row">
+            <div class="col-md-8">
+              <input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-file-csv"></i> Subir CSV.customer</button>
+            </div>
           </div>
         </form>
       </div>
@@ -63,17 +58,61 @@
               <input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control">
             </div>
             <div class="col-md-4">
-              <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-file-csv"></i> Subir CSV</button>
+              <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-file-csv"></i> Subir CSV.invoice</button>
             </div>
           </div>
         </form>
       </div>
     </div>
-
+<!-- Subir CSV -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <form id="csvForm">
+          <div class="row">
+            <div class="col-md-8">
+              <input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-file-csv"></i> Subir CSV.platform</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+<!-- Subir CSV -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <form id="csvForm">
+          <div class="row">
+            <div class="col-md-8">
+              <input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-file-csv"></i> Subir CSV.status</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+<!-- Subir CSV -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <form id="csvForm">
+          <div class="row">
+            <div class="col-md-8">
+              <input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-file-csv"></i> Subir CSV.transaction</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
     <!-- Tabla -->
     <div class="card">
       <div class="card-body">
-        <table class="table table-striped" id="employeesTable">
+        <table class="table table-striped" id="customerTable">
           <thead>
             <tr>
               <th>#</th><th>Name</th><th>Email</th><th>Charge</th><th>City</th><th>Salary</th><th>Age</th><th>Acciones</th>

@@ -28,7 +28,7 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'postobon_01',
+  database: process.env.DB_NAME || 'ExpertSoft',
   port: process.env.DB_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 10
@@ -50,18 +50,12 @@ export const testConnection = async () => {
 // Función para crear la tabla si no existe
 export const createTableIfNotExists = async () => {
   const createTableSQL = `
-    CREATE TABLE IF NOT EXISTS employees (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      Name VARCHAR(100) NOT NULL,
-      Lastname VARCHAR(100) NOT NULL,
-      Lastname2 VARCHAR(100),
-      Email VARCHAR(150) UNIQUE,
-      Charge VARCHAR(100),
-      City VARCHAR(100),
-      Salary DECIMAL(10,2),
-      Age INT,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
+  CREATE TABLE customer IF NOT EXISTS(
+  ID_customer INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(50),
+  last_name VARCHAR(50),
+  active boolean);
+  )
   `;
   
   try {

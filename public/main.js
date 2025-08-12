@@ -1,10 +1,12 @@
 // public/main.js - Módulos ES6 con Vite
 
+import { deletecustomer } from "../customerservice";
+
 // Configuración de la API
 const config = {
   baseApi: '/api',
   endpoints: {
-    employees: '/employees',
+    customer: '/customer',
     uploadCsv: '/upload-csv'
   }
 };
@@ -40,17 +42,17 @@ const utils = {
 };
 
 // API Service
-class EmployeeService {
+class customerservice {
   static async getAll() {
-    const response = await fetch(`${config.baseApi}${config.endpoints.employees}`);
+    const response = await fetch(`${config.baseApi}${config.endpoints.customer}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.json();
   }
 
-  static async create(employee) {
-    const response = await fetch(`${config.baseApi}${config.endpoints.employees}`, {
+  static async create(customer) {
+    const response = await fetch(`${config.baseApi}${config.endpoints.customer}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(employee)
@@ -61,11 +63,11 @@ class EmployeeService {
     return await response.json();
   }
 
-  static async update(id, employee) {
-    const response = await fetch(`${config.baseApi}${config.endpoints.employees}/${id}`, {
+  static async update(id, customer) {
+    const response = await fetch(`${config.baseApi}${config.endpoints.customer}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(employee)
+      body: JSON.stringify(customer)
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -74,7 +76,7 @@ class EmployeeService {
   }
 
   static async delete(id) {
-    const response = await fetch(`${config.baseApi}${config.endpoints.employees}/${id}`, {
+    const response = await fetch(`${config.baseApi}${config.endpoints.customer}/${id}`, {
       method: 'DELETE'
     });
     if (!response.ok) {
@@ -99,43 +101,43 @@ class EmployeeService {
 
 // UI Controller
 class EmployeeUI {
-  static async loadEmployees() {
+  static async loadcustomer() {
     const tbody = document.querySelector('#employeesTable tbody');
     tbody.innerHTML = '<tr><td colspan="8">Cargando...</td></tr>';
     
     try {
-      const employees = await EmployeeService.getAll();
-      this.renderEmployees(employees);
+      const customer = await customerservice.getAll();
+      this.renderEmployees(customer);
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="8">Error al cargar empleados: ${error.message}</td></tr>`;
-      utils.showMessage(`Error al cargar empleados: ${error.message}`, 'error');
+      tbody.innerHTML = `<tr><td colspan="8">Error al cargar clientes: ${error.message}</td></tr>`;
+      utils.showMessage(`Error al cargar clientes: ${error.message}`, 'error');
     }
   }
 
-  static renderEmployees(employees) {
+  static rendercustomer(customer) {
     const tbody = document.querySelector('#employeesTable tbody');
     tbody.innerHTML = '';
     
-    if (employees.length === 0) {
+    if (customer.length === 0) {
       tbody.innerHTML = '<tr><td colspan="8">No hay empleados registrados.</td></tr>';
       return;
     }
 
-    employees.forEach((employee, index) => {
+    customer.forEach((customer, index) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${employee.id ?? index + 1}</td>
-        <td>${utils.escapeHtml(employee.Name)}</td>
-        <td>${utils.escapeHtml(employee.Email)}</td>
-        <td>${utils.escapeHtml(employee.Charge)}</td>
-        <td>${utils.escapeHtml(employee.City)}</td>
-        <td>${employee.Salary ?? ''}</td>
-        <td>${employee.Age ?? ''}</td>
+        <td>${customer.id ?? index + 1}</td>
+        <td>${utils.escapeHtml(customer.Name)}</td>
+        <td>${utils.escapeHtml(customer.Email)}</td>
+        <td>${utils.escapeHtml(customer.Charge)}</td>
+        <td>${utils.escapeHtml(customer.City)}</td>
+        <td>${customer.Salary ?? ''}</td>
+        <td>${customer.Age ?? ''}</td>
         <td>
-          <button class="btn btn-sm btn-outline-primary me-1" onclick="EmployeeApp.editEmployee(${employee.id})">
+          <button class="btn btn-sm btn-outline-primary me-1" onclick="EmployeeApp.editEmployee(${customer.id})">
             <i class="fa-solid fa-pen"></i>
           </button>
-          <button class="btn btn-sm btn-outline-danger" onclick="EmployeeApp.deleteEmployee(${employee.id})">
+          <button class="btn btn-sm btn-outline-danger" onclick="EmployeeApp.deleteEmployee(${customer.id})">
             <i class="fa-solid fa-trash"></i>
           </button>
         </td>
@@ -147,40 +149,35 @@ class EmployeeUI {
   static resetForm() {
     document.getElementById('employeeForm').reset();
     document.getElementById('empId').value = '';
-    document.getElementById('submitBtn').textContent = 'Crear Empleado';
+    document.getElementById('submitBtn').textContent = 'Creacion de clientes';
   }
 
-  static populateForm(employee) {
-    document.getElementById('empId').value = employee.id;
-    document.getElementById('Name').value = employee.Name || '';
-    document.getElementById('Lastname').value = employee.Lastname || '';
-    document.getElementById('Lastname2').value = employee.Lastname2 || '';
-    document.getElementById('Email').value = employee.Email || '';
-    document.getElementById('Charge').value = employee.Charge || '';
-    document.getElementById('City').value = employee.City || '';
-    document.getElementById('Salary').value = employee.Salary || '';
-    document.getElementById('Age').value = employee.Age || '';
+  static populateForm(customer) {
+    document.getElementById('empId').value = customer.id;
+    document.getElementById('Name').value = customer.Name || '';
+    document.getElementById('Lastname').value = customer.Lastname || '';
+    document.getElementById('Lastname2').value = customer.Lastname2 || '';
+    document.getElementById('Email').value = customer.Email || '';
+    document.getElementById('Charge').value = customer.Charge || '';
+    document.getElementById('City').value = customer.City || '';
+    document.getElementById('Salary').value = customer.Salary || '';
+    document.getElementById('Age').value = customer.Age || '';
     document.getElementById('submitBtn').textContent = 'Actualizar Empleado';
   }
 
   static getFormData() {
     return {
-      Name: document.getElementById('Name').value.trim(),
-      Lastname: document.getElementById('Lastname').value.trim(),
-      Lastname2: document.getElementById('Lastname2').value.trim(),
-      Email: document.getElementById('Email').value.trim(),
-      Charge: document.getElementById('Charge').value.trim(),
-      City: document.getElementById('City').value.trim(),
-      Salary: parseFloat(document.getElementById('Salary').value) || 0,
-      Age: parseInt(document.getElementById('Age').value) || 0
+      first_name: document.getElementById('first_name').value.trim(),
+      last_name: document.getElementById('last_name').value.trim(),
+      active: document.getElementById('active').value.trim(),
     };
   }
 }
 
 // Main Application Controller
-class EmployeeApp {
+class customerApp {
   static async init() {
-    await EmployeeUI.loadEmployees();
+    await EmployeeUI.loadcustomer();
     this.setupEventListeners();
     utils.showMessage('Aplicación iniciada correctamente', 'success');
   }
@@ -192,7 +189,7 @@ class EmployeeApp {
 
     // Reset button
     document.getElementById('resetBtn').addEventListener('click', () => {
-      EmployeeUI.resetForm();
+      customerUI.resetForm();
     });
 
     // CSV upload
@@ -202,19 +199,19 @@ class EmployeeApp {
   static async handleFormSubmit(e) {
     e.preventDefault();
     const id = document.getElementById('empId').value;
-    const formData = EmployeeUI.getFormData();
+    const formData = customerUI.getFormData();
 
     try {
       if (id) {
-        await EmployeeService.update(id, formData);
-        utils.showMessage('Empleado actualizado correctamente', 'success');
+        await customerService.update(id, formData);
+        utils.showMessage('cliente actualizado correctamente', 'success');
       } else {
-        await EmployeeService.create(formData);
-        utils.showMessage('Empleado creado correctamente', 'success');
+        await customerService.create(formData);
+        utils.showMessage('cliente creado correctamente', 'success');
       }
       
-      EmployeeUI.resetForm();
-      await EmployeeUI.loadEmployees();
+      customerUI.resetForm();
+      await customerUI.loadEmployees();
     } catch (error) {
       utils.showMessage(`Error al guardar empleado: ${error.message}`, 'error');
     }
@@ -230,36 +227,36 @@ class EmployeeApp {
     }
 
     try {
-      const result = await EmployeeService.uploadCsv(fileInput.files[0]);
+      const result = await customerService.uploadCsv(fileInput.files[0]);
       utils.showMessage(`CSV cargado correctamente. ${result.inserted} empleados insertados.`, 'success');
       fileInput.value = '';
-      await EmployeeUI.loadEmployees();
+      await customerUI.loadcustomer();
     } catch (error) {
       utils.showMessage(`Error al cargar CSV: ${error.message}`, 'error');
     }
   }
 
-  static async editEmployee(id) {
+  static async editcustomer(id) {
     try {
-      const employees = await EmployeeService.getAll();
-      const employee = employees.find(emp => emp.id == id);
-      if (employee) {
-        EmployeeUI.populateForm(employee);
+      const customers = await customerService.getAll();
+      const customer = customers.find(emp => emp.id == id);
+      if (customer) {
+        customerUI.populateForm(customer);
         document.getElementById('Name').focus();
       }
     } catch (error) {
-      utils.showMessage(`Error al cargar empleado: ${error.message}`, 'error');
+      utils.showMessage(`Error al cargar cliente: ${error.message}`, 'error');
     }
   }
 
-  static async deleteEmployee(id) {
+  static async deletecustomer(id) {
     if (confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
       try {
-        await EmployeeService.delete(id);
+        await customerService.delete(id);
         utils.showMessage('Empleado eliminado correctamente', 'success');
-        await EmployeeUI.loadEmployees();
+        await customerUI.loadcustomer();
       } catch (error) {
-        utils.showMessage(`Error al eliminar empleado: ${error.message}`, 'error');
+        utils.showMessage(`Error al eliminar cliente: ${error.message}`, 'error');
       }
     }
   }
@@ -267,11 +264,11 @@ class EmployeeApp {
 
 // Initialize application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  EmployeeApp.init();
+  customerApp.init();
 });
 
 // Make functions globally available for onclick handlers
-window.EmployeeApp = EmployeeApp;
+window.customerApp = customerApp;
 
 function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
@@ -279,20 +276,15 @@ async function onSave(e) {
   e.preventDefault();
   const id = document.getElementById('empId').value;
   const payload = {
-    Name: document.getElementById('Name').value.trim(),
-    Lastname: document.getElementById('Lastname').value.trim(),
-    Lastname2: document.getElementById('Lastname2').value.trim(),
-    Email: document.getElementById('Email').value.trim(),
-    Charge: document.getElementById('Charge').value.trim(),
-    City: document.getElementById('City').value.trim(),
-    Salary: Number(document.getElementById('Salary').value) || 0,
-    Age: Number(document.getElementById('Age').value) || 0
+    first_name: document.getElementById('first_name').value.trim(),
+    last_name: document.getElementById('last_name').value.trim(),  
+    active: document.getElementById('active').value.trim(),
   };
 
-  if (!payload.Name || !payload.Lastname) return alert('Name y Lastname son requeridos');
+  if (!payload.first_name || !payload.last_name) return alert('Name y Lastname son requeridos');
 
   const method = id ? 'PUT' : 'POST';
-  const url = id ? `${baseApi}/employees/${id}` : `${baseApi}/employees`;
+  const url = id ? `${baseApi}/customer/${id}` : `${baseApi}/customer`;
 
   const res = await fetch(url, {
     method,
@@ -305,35 +297,28 @@ async function onSave(e) {
     return;
   }
   resetForm();
-  loadEmployees();
+  loadcustomer();
 }
 
 function resetForm(){
-  document.getElementById('empId').value = '';
-  document.getElementById('employeeForm').reset();
+  document.getElementById('ID_customer').value = '';
+  document.getElementById('customerForm').reset();
   document.getElementById('saveBtn').textContent = 'Guardar';
 }
 
-window.editEmployee = async function(id){
-  const res = await fetch(`${baseApi}/employees/${id}`);
-  if (!res.ok) return alert('No se pudo obtener empleado');
+window.editcustomer = async function(id){
+  const res = await fetch(`${baseApi}/customer/${id}`);
+  if (!res.ok) return alert('No se pudo obtener clientes');
   const emp = await res.json();
-  document.getElementById('empId').value = emp.id;
-  document.getElementById('Name').value = emp.Name || '';
-  document.getElementById('Lastname').value = emp.Lastname || '';
-  document.getElementById('Lastname2').value = emp.Lastname2 || '';
-  document.getElementById('Email').value = emp.Email || '';
-  document.getElementById('Charge').value = emp.Charge || '';
-  document.getElementById('City').value = emp.City || '';
-  document.getElementById('Salary').value = emp.Salary || '';
-  document.getElementById('Age').value = emp.Age || '';
-  document.getElementById('saveBtn').textContent = 'Actualizar';
+  document.getElementById('first_name').value = emp.first_name;
+  document.getElementById('last_name').value = emp.last_name || '';
+  document.getElementById('active').value = emp.active || '';
 };
 
-window.deleteEmployee = async function(id){
-  if (!confirm('¿Eliminar este empleado?')) return;
-  const res = await fetch(`${baseApi}/employees/${id}`, { method: 'DELETE' });
+window.deletecustomer = async function(id){
+  if (!confirm('¿Eliminar este cliente?')) return;
+  const res = await fetch(`${baseApi}/customer/${id}`, { method: 'DELETE' });
   const data = await res.json();
   if (!res.ok) return alert('Error: ' + (data.error || res.statusText));
-  loadEmployees();
+  loadcustomer();
 };

@@ -1,30 +1,15 @@
--- Inicialización de base de datos para el proyecto de empleados
+CREATE DATABASE ExpertSoft;
 
--- Crear base de datos si no existe
-CREATE DATABASE IF NOT EXISTS postobon_01;
+USE ExpertSoft
 
--- Usar la base de datos
-USE postobon_01;
 
--- Crear tabla de empleados
-CREATE TABLE IF NOT EXISTS employees (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(100) NOT NULL,
-    Lastname VARCHAR(100) NOT NULL,
-    Lastname2 VARCHAR(100),
-    Email VARCHAR(150) UNIQUE,
-    Charge VARCHAR(100),
-    City VARCHAR(100),
-    Salary DECIMAL(10,2),
-    Age INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE status(ID_status INT AUTO_INCREMENT PRIMARY KEY,status_name
+VARCHAR(50),description VARCHAR(300));
 
--- Crear usuario específico para la aplicación (opcional, más seguro)
--- CREATE USER IF NOT EXISTS 'app_user'@'localhost' IDENTIFIED BY 'app_password';
--- GRANT SELECT, INSERT, UPDATE, DELETE ON postobon_01.* TO 'app_user'@'localhost';
--- FLUSH PRIVILEGES;
+CREATE TABLE platform (ID_platform INT AUTO_INCREMENT PRIMARY KEY,platform_name VARCHAR(50),platform_type VARCHAR(50),active boolean);
 
--- Verificar que la tabla se creó correctamente
-DESCRIBE employees;
+CREATE TABLE customer (ID_customer INT AUTO_INCREMENT PRIMARY KEY,first_name VARCHAR(50),last_name VARCHAR(50),active boolean);
+
+CREATE TABLE invoice(ID_invoice int AUTO_INCREMENT PRIMARY key, amount_paid DECIMAL(10,2),billing_period VARCHAR(50),invoice_amount DECIMAL(10,2),))
+
+CREATE TABLE transaction (ID_transaction INT AUTO_INCREMENT PRIMARY KEY,ID_customer INT,ID_status INT,ID_ platform INT,ID_invoice INT,trasaction_datetime DATE,transaction_type VARCHAR(50),transaction_amount DECIMAL(10,2),FOREIGN key transaction(ID_customer) REFERENCES customer(ID_customer),FOREIGN key transaction(ID_status) REFERENCES status(ID_status),FOREIGN key transaction(ID_platform) REFERENCES platform(ID_platform),FOREIGN key transaction(ID_invoice) REFERENCES invoice(ID_invoice));
